@@ -6,13 +6,9 @@
 package pantallasproyectoarquitectura;
 
 import conexion.ClientSideConnection;
-
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author 52644
- */
+
 public class MenuPrincipal extends javax.swing.JFrame {
 
     private final ClientSideConnection cliente;
@@ -109,17 +105,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCrearSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearSalaActionPerformed
-        
-      
-        String nombre = JOptionPane.showInputDialog(this, "Introduzca el nombre de jugador.");
-        CrearSala abrir = new CrearSala(cliente,nombre);
-        abrir.setVisible(true);
-        this.dispose();
-
-
-    }//GEN-LAST:event_btnCrearSalaActionPerformed
-
     private void btnUnirseSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnirseSalaActionPerformed
         
         String nombre = JOptionPane.showInputDialog(this, "Introduzca el nombre de jugador.");
@@ -140,6 +125,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnCrearSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearSalaActionPerformed
+
+        String nombre = JOptionPane.showInputDialog(this, "Introduzca el nombre de jugador.");
+        CrearSala abrir = new CrearSala(cliente,nombre);
+        abrir.setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_btnCrearSalaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -6,16 +6,8 @@
 package pantallasproyectoarquitectura;
 
 import conexion.ClientSideConnection;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import javax.swing.JOptionPane;
 
-/**
- *
- * @author 52644
- */
+
 public class CrearSala extends javax.swing.JFrame {
 
     ClientSideConnection cliente;

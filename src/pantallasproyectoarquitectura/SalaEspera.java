@@ -1,21 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pantallasproyectoarquitectura;
 
 import conexion.ClientSideConnection;
-import javax.swing.JOptionPane;
 import generacionTablero.Timbiriche;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 
-/**
- *
- * @author carls
- */
-public class SalaEspera extends javax.swing.JFrame {
+public class SalaEspera extends javax.swing.JFrame implements Runnable {
 
     private ClientSideConnection cliente;
     private String nombre;
@@ -27,7 +19,6 @@ public class SalaEspera extends javax.swing.JFrame {
         initComponents();
         cantidadMaximaJugadores = cliente.getCantidadMaximaJugadores();
         cargarEtiquetas();
-
     }
 
     /**
@@ -193,22 +184,28 @@ public class SalaEspera extends javax.swing.JFrame {
     }
 
     public void cargarEtiquetas() {
-        
-        ArrayList jugadores=cliente.leerJugadoresConectados();
-        while (jugadores.size()<cantidadMaximaJugadores) {
-            ArrayList listaJugadores = cliente.leerJugadoresConectados();
+        Thread hiloEspera = new Thread(this);
+        hiloEspera.start();
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+           
+            ArrayList jugadores = cliente.leerJugadoresConectados();
             ArrayList etiquetasNombres = new ArrayList();
             etiquetasNombres.add(nombre1);
-            etiquetasNombres.add(nombre3);
             etiquetasNombres.add(nombre2);
+            etiquetasNombres.add(nombre3);
             etiquetasNombres.add(nombre4);
 
-            for (int i = 0; i < listaJugadores.size(); i++) {
-                ((JLabel) etiquetasNombres.get(i)).setText((String) listaJugadores.get(i));
+            for (int o = 0; o < jugadores.size(); o++) {
+                ((JLabel) etiquetasNombres.get(o)).setText((String) jugadores.get(o));
             }
+        
+            
 
         }
-
     }
 
 
@@ -226,4 +223,5 @@ public class SalaEspera extends javax.swing.JFrame {
     private javax.swing.JLabel nombre3;
     private javax.swing.JLabel nombre4;
     // End of variables declaration//GEN-END:variables
+
 }
