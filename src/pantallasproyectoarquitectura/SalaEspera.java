@@ -104,9 +104,17 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
             int jugadoresActuales = cliente.leerJugadoresConectados();
 
             if (cantidadMaxima == jugadoresActuales) {
+                if (cantidadMaxima==3 && jugadoresActuales != 3) {
+                    cliente.saltarLinea();
+                }
+                else if(cantidadMaxima==4 && jugadoresActuales!=4){
+                    cliente.saltarLinea();
+                }
+                
                 IniciarPartida();
+
                 break;
-            } else if (jugadoresActuales == 1 || jugadoresActuales == 2 || jugadoresActuales == 3) {
+            } else if (jugadoresActuales <= 3) {
                 cliente.saltarLinea();
             }
         }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class Timbiriche extends JFrame implements MouseMotionListener, MouseListener {
+public class Timbiriche extends JFrame implements MouseMotionListener, MouseListener, Runnable {
 
     public int cantidadJugadores;
 
@@ -68,6 +68,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     public Timbiriche(ClientSideConnection c, int tamanio) {
         super("Timbiriche");
         cliente = c;
+       
         setLayout(new CardLayout(espacio, espacio));
         setSize(1400, 1000);
         setFont(new Font("Courier", Font.BOLD, 20));
@@ -94,7 +95,9 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         cargarPropiedades();
         generarPuntos();
         setVisible(true);
-        empezarJuego();
+        Thread partida=new Thread(this);
+        partida.start();
+
     }
 
     private void cargarPropiedades() {
@@ -184,16 +187,16 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void empezarJuego() {
-        while (true) {
-        
-            try {
-                turno = cliente.getTurnoValido();
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(Timbiriche.class.getName()).log(Level.SEVERE, null, ex);
-            }
+       
+            jugadorActivo=jugadorUno;
+//            try {
+//                turno = cliente.getTurnoValido();
+//            } catch (IOException | ClassNotFoundException ex) {
+//                Logger.getLogger(Timbiriche.class.getName()).log(Level.SEVERE, null, ex);
+//            }
             generarConexiones();
             generarCajas();
-        }
+       
     }
 
     private ConnectionSprite getConexion(int x, int y) {
@@ -435,6 +438,11 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         pintarEstado(bufferGraphics);
 
         g.drawImage(bufferImage, 0, 0, null);
+    }
+
+    @Override
+    public void run() {
+        empezarJuego();
     }
 
 }
