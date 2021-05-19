@@ -57,27 +57,23 @@ public class ClientSideConnection {
         }
     }
 
-    public ArrayList leerJugadoresConectados() {
+    public Integer leerJugadoresConectados() {
         try {
-
-            ArrayList jugadores = (ArrayList) dis.readObject();
+            Integer jugadores = (Integer) dis.readObject();
             return jugadores;
-
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error al recuperar la lista de jugadores.");
-        } catch (ClassCastException i) {
-                try {
-                  ArrayList jugadores = (ArrayList) dis.readObject();
-                   return jugadores;
-                  } catch (IOException | ClassNotFoundException ex) {
-                   Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
-               }
-
-        }
+        } 
         return null;
     }
 
-
+    public void saltarLinea(){
+        try {
+            dis.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public int getCantidadMaximaJugadores() {
         try {
@@ -91,5 +87,20 @@ public class ClientSideConnection {
         }
         return -1;
     }
+    
+    public boolean getTurnoValido() throws IOException, ClassNotFoundException{
+        try {
+    
+            return (boolean)dis.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassCastException e){
+            dis.readObject();
+            return (boolean)dis.readObject();
+        }
+         return false;
+    }
+    
+    
 
 }

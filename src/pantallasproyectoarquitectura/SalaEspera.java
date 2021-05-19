@@ -2,23 +2,20 @@ package pantallasproyectoarquitectura;
 
 import conexion.ClientSideConnection;
 import generacionTablero.Timbiriche;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JLabel;
 
 public class SalaEspera extends javax.swing.JFrame implements Runnable {
 
     private ClientSideConnection cliente;
-    private String nombre;
-    private int cantidadMaximaJugadores;
 
     public SalaEspera(String n, ClientSideConnection c) {
-        nombre = n;
         cliente = c;
         initComponents();
-        cantidadMaximaJugadores = cliente.getCantidadMaximaJugadores();
-        cargarEtiquetas();
+        esperarSalaLlena();
+    }
+
+    public void esperarSalaLlena() {
+        Thread hilo = new Thread(this);
+        hilo.start();
     }
 
     /**
@@ -31,107 +28,27 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        etiquetaJugadores = new javax.swing.JLabel();
-        etiquetaJugador1 = new javax.swing.JLabel();
-        etiquetaJugador3 = new javax.swing.JLabel();
-        etiquetaJugador2 = new javax.swing.JLabel();
-        etiquetaJugador4 = new javax.swing.JLabel();
-        botonSalir = new javax.swing.JButton();
-        botonComenzar = new javax.swing.JButton();
-        nombre1 = new javax.swing.JLabel();
-        nombre2 = new javax.swing.JLabel();
-        nombre3 = new javax.swing.JLabel();
-        nombre4 = new javax.swing.JLabel();
+        etiquetaEspera = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        etiquetaJugadores.setText("Jugadores");
-
-        etiquetaJugador1.setText("Jugador 1");
-
-        etiquetaJugador3.setText("Jugador 3");
-
-        etiquetaJugador2.setText("Jugador 2");
-
-        etiquetaJugador4.setText("Jugador 4");
-
-        botonSalir.setText("Salir");
-
-        botonComenzar.setText("Comenzar");
-        botonComenzar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botonComenzarActionPerformed(evt);
-            }
-        });
-
-        nombre1.setText(" ");
-
-        nombre2.setText(" ");
-
-        nombre3.setText(" ");
-
-        nombre4.setText(" ");
+        etiquetaEspera.setText("Esperando que lleguen todos los jugadores");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(botonComenzar)
-                        .addGap(167, 167, 167)
-                        .addComponent(botonSalir)
-                        .addContainerGap(52, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(etiquetaJugador1)
-                            .addComponent(etiquetaJugadores)
-                            .addComponent(etiquetaJugador3)
-                            .addComponent(nombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nombre3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(48, 48, 48)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(etiquetaJugador4)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(nombre4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(etiquetaJugador2)
-                                    .addComponent(nombre2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                .addGap(57, 57, 57)
+                .addComponent(etiquetaEspera)
+                .addContainerGap(66, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(etiquetaJugadores)
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(etiquetaJugador1)
-                    .addComponent(etiquetaJugador2))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(100, 100, 100)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(etiquetaJugador3)
-                            .addComponent(etiquetaJugador4))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nombre4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nombre3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botonSalir)
-                            .addComponent(botonComenzar)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(nombre2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(57, 57, 57)
+                .addComponent(etiquetaEspera)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -144,27 +61,18 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void botonComenzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonComenzarActionPerformed
-//
-//        if (JOptionPane.showConfirmDialog(null, "¿Desea empezar la partida con los jugadores actuales?",
-//                "Seleccione una opción.", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == 0) {
-//            IniciarPartida();
-//        }
-
-
-    }//GEN-LAST:event_botonComenzarActionPerformed
-
     public void IniciarPartida() {
 
         int tamanio = 0;
-        int maxTamJug = 0;
+        int maxTamJug = cliente.getCantidadMaximaJugadores();
         switch (maxTamJug) {
             case 2:
                 tamanio = 10;
@@ -173,55 +81,35 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
                 tamanio = 20;
                 break;
             case 4:
-                tamanio = 30;
+                tamanio = 20;
                 break;
-
         }
 
-        Timbiriche pj = new Timbiriche(tamanio + 1);
+        Timbiriche pj = new Timbiriche(cliente, tamanio + 1);
         pj.setVisible(true);
         this.dispose();
     }
 
-    public void cargarEtiquetas() {
-        Thread hiloEspera = new Thread(this);
-        hiloEspera.start();
-    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel etiquetaEspera;
+    private javax.swing.JPanel jPanel1;
+    // End of variables declaration//GEN-END:variables
 
     @Override
     public void run() {
+
         while (true) {
-           
-            ArrayList jugadores = cliente.leerJugadoresConectados();
-            ArrayList etiquetasNombres = new ArrayList();
-            etiquetasNombres.add(nombre1);
-            etiquetasNombres.add(nombre2);
-            etiquetasNombres.add(nombre3);
-            etiquetasNombres.add(nombre4);
+            int cantidadMaxima = cliente.getCantidadMaximaJugadores();
+            int jugadoresActuales = cliente.leerJugadoresConectados();
 
-            for (int o = 0; o < jugadores.size(); o++) {
-                ((JLabel) etiquetasNombres.get(o)).setText((String) jugadores.get(o));
+            if (cantidadMaxima == jugadoresActuales) {
+                IniciarPartida();
+                break;
+            } else if (jugadoresActuales == 1 || jugadoresActuales == 2 || jugadoresActuales == 3) {
+                cliente.saltarLinea();
             }
-        
-            
-
         }
     }
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton botonComenzar;
-    private javax.swing.JButton botonSalir;
-    private javax.swing.JLabel etiquetaJugador1;
-    private javax.swing.JLabel etiquetaJugador2;
-    private javax.swing.JLabel etiquetaJugador3;
-    private javax.swing.JLabel etiquetaJugador4;
-    private javax.swing.JLabel etiquetaJugadores;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel nombre1;
-    private javax.swing.JLabel nombre2;
-    private javax.swing.JLabel nombre3;
-    private javax.swing.JLabel nombre4;
-    // End of variables declaration//GEN-END:variables
 
 }

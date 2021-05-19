@@ -104,8 +104,8 @@ public class CrearSala extends javax.swing.JFrame {
     private void btnConfirmarCrearSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarCrearSalaActionPerformed
         cliente.setCantidadMaxJugadores(Integer.parseInt((String)cajaJugadores.getSelectedItem()));
         cliente.conectarJugador(nombre);
-        SalaEspera mp = new SalaEspera(nombre,cliente);
-        mp.setVisible(true);
+        SalaEspera se = new SalaEspera(nombre,cliente);
+        se.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnConfirmarCrearSalaActionPerformed
 

@@ -1,5 +1,6 @@
 package generacionTablero;
 
+import conexion.ClientSideConnection;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,8 +12,11 @@ import java.awt.Font;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -53,13 +57,17 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
     private int centrox;
     private int centroy;
-    //Longitud de los lados del tablero cuadrangular
+
     private int tamanioLadoTablero;
     private int espacio;
     private int jugadorActivo;
 
-    public Timbiriche(int tamanio) {
+    private ClientSideConnection cliente;
+    private boolean turno = false;
+
+    public Timbiriche(ClientSideConnection c, int tamanio) {
         super("Timbiriche");
+        cliente = c;
         setLayout(new CardLayout(espacio, espacio));
         setSize(1400, 1000);
         setFont(new Font("Courier", Font.BOLD, 20));
@@ -75,24 +83,18 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
                 espacioEntrePuntos = 30;
                 tamanioPuntos = 10;
                 break;
-            case 30:
-                cantidadJugadores = 4;
-                espacioEntrePuntos = 24;
-                tamanioPuntos = 6;
-                break;
-        }
 
+        }
         cantidadPuntos = tamanio;
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addMouseListener(this);
         addMouseMotionListener(this);
 
         cargarPropiedades();
         generarPuntos();
-
-        empezarJuego();
-
         setVisible(true);
+        empezarJuego();
     }
 
     private void cargarPropiedades() {
@@ -163,14 +165,6 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void generarPuntos() {
-        /*
-		 *	loadDots cycles through the dot grid differently than the loadConnections and loadBoxes methods
-		 *	cycle through the connections and boxes grids. The loadDots cycles through the dot grid with two
-		 *	for loops. It doesn't matter what order the dots are loaded into the dots array since they are for
-		 *	visual purposes only. The body of the loop also contains the code to actually build the dots shape.
-		 *
-         */
-
         puntos = new Sprite[cantidadPuntos * cantidadPuntos];
         for (int rows = 0; rows < cantidadPuntos; rows++) {
             for (int cols = 0; cols < cantidadPuntos; cols++) {
@@ -190,36 +184,37 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void empezarJuego() {
-        jugadorActivo = jugadores.get(0);
-        generarConexiones();
-        generarCajas();
+        while (true) {
+        
+            try {
+                turno = cliente.getTurnoValido();
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(Timbiriche.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            generarConexiones();
+            generarCajas();
+        }
     }
 
     private ConnectionSprite getConexion(int x, int y) {
-
-        // Get the connection that encloses point (x, y) or return null if there isn't one
         for (int i = 0; i < conexionesHorizontales.length; i++) {
             if (conexionesHorizontales[i].containsPoint(x, y)) {
                 return conexionesHorizontales[i];
             }
         }
-
         for (int i = 0; i < conexionesVerticales.length; i++) {
             if (conexionesVerticales[i].containsPoint(x, y)) {
                 return conexionesVerticales[i];
             }
         }
-
         return null;
     }
 
     private boolean[] getEstaoCaja() {
         boolean[] estado = new boolean[cajas.length];
-
         for (int i = 0; i < estado.length; i++) {
             estado[i] = cajas[i].isBoxed();
         }
-
         return estado;
     }
 
@@ -231,7 +226,6 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
                 scores[cajas[i].player - 1]++;
             }
         }
-
         return scores;
     }
 
@@ -293,12 +287,9 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         if (connection == null) {
             return;
         }
-
         if (!connection.connectionMade) {
             realizarConexionPuntos(connection);
-
         }
-
         repaint();
     }
 
@@ -315,7 +306,6 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     public void mouseClicked(MouseEvent event) {
         clickx = event.getX();
         clicky = event.getY();
-
         handleClick();
     }
 
@@ -391,7 +381,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
             }
 
             cajas[i].render(g);
-            
+
         }
     }
 

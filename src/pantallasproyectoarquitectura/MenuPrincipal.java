@@ -19,6 +19,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public MenuPrincipal() {
         cliente=new ClientSideConnection();
         initComponents();
+        
     }
 
     /**
@@ -112,8 +113,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         SalaEspera abrir = new SalaEspera(nombre,cliente);
         abrir.setVisible(true);
         this.dispose();
-
-
     }//GEN-LAST:event_btnUnirseSalaActionPerformed
 
     private void btnCrearJugadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearJugadorActionPerformed
