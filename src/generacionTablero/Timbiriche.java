@@ -291,6 +291,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
             return;
         }
         if (!connection.connectionMade) {
+            
             realizarConexionPuntos(connection);
         }
         repaint();
