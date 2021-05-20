@@ -29,18 +29,12 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     public static int espacioEntrePuntos;
     public static int tamanioPuntos;
 
-    public static final Integer jugadorUno = 1;
-    public static final Integer jugadorDos = 2;
-    public static final Integer jugadorTres = 3;
-    public static final Integer jugadorCuatro = 4;
 
-    public static final Color colorUno = Color.BLUE;
-    public static final Color colorDos = Color.GREEN;
-    public static final Color colorTres = Color.CYAN;
-    public static final Color colorCuatro = Color.RED;
 
-    public static ArrayList<Integer> jugadores = new ArrayList<Integer>();
-    public static ArrayList<Integer> jugadoresOrdenados = new ArrayList<Integer>();
+    private static final Color colorUno = Color.BLUE;
+    private static final Color colorDos = Color.GREEN;
+    private static final Color colorTres = Color.CYAN;
+    private static final Color colorCuatro = Color.RED;
 
     private ConnectionSprite[] conexionesHorizontales;
     private ConnectionSprite[] conexionesVerticales;
@@ -54,62 +48,56 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
     private int mousex;
     private int mousey;
-
+    //Centro del tablero
     private int centrox;
     private int centroy;
-
+    //Tamaño del lado del tablero cuadrangular
     private int tamanioLadoTablero;
     private int espacio;
+
     private int jugadorActivo;
+    private final int turno;
 
     private ClientSideConnection cliente;
-    private boolean turno = false;
 
     public Timbiriche(ClientSideConnection c, int tamanio) {
         super("Timbiriche");
         cliente = c;
-       
+
         setLayout(new CardLayout(espacio, espacio));
         setSize(1400, 1000);
         setFont(new Font("Courier", Font.BOLD, 20));
         setResizable(false);
         switch (tamanio - 1) {
-            case 10:
-                cantidadJugadores = 2;
+            case 10:   
                 espacioEntrePuntos = 65;
                 tamanioPuntos = 10;
                 break;
             case 20:
-                cantidadJugadores = 3;
                 espacioEntrePuntos = 30;
                 tamanioPuntos = 10;
                 break;
 
         }
+        cantidadJugadores=cliente.getCantidadMaximaJugadores();
         cantidadPuntos = tamanio;
-        
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addMouseListener(this);
         addMouseMotionListener(this);
 
         cargarPropiedades();
         generarPuntos();
+        empezarJuego();
         setVisible(true);
-        Thread partida=new Thread(this);
-        partida.start();
 
+        Thread partida = new Thread(this);
+        partida.start();
+        
+        turno = cliente.getTurno();
     }
 
     private void cargarPropiedades() {
-        jugadores.add(jugadorUno);
-        jugadores.add(jugadorDos);
-        if (cantidadJugadores >= 3) {
-            jugadores.add(jugadorTres);
-            if (cantidadJugadores == 4) {
-                jugadores.add(jugadorCuatro);
-            }
-        }
-        Collections.shuffle(jugadores);
 
         clickx = 0;
         clicky = 0;
@@ -122,6 +110,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
         tamanioLadoTablero = cantidadPuntos * tamanioPuntos + (cantidadPuntos - 1) * espacioEntrePuntos;
         espacio = tamanioPuntos + espacioEntrePuntos;
+
     }
 
     private void generarConexiones() {
@@ -187,16 +176,10 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void empezarJuego() {
-       
-            jugadorActivo=jugadorUno;
-//            try {
-//                turno = cliente.getTurnoValido();
-//            } catch (IOException | ClassNotFoundException ex) {
-//                Logger.getLogger(Timbiriche.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-            generarConexiones();
-            generarCajas();
-       
+        
+        generarConexiones();
+        generarCajas();
+
     }
 
     private ConnectionSprite getConexion(int x, int y) {
@@ -213,7 +196,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         return null;
     }
 
-    private boolean[] getEstaoCaja() {
+    private boolean[] getEstadoCaja() {
         boolean[] estado = new boolean[cajas.length];
         for (int i = 0; i < estado.length; i++) {
             estado[i] = cajas[i].isBoxed();
@@ -226,6 +209,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
         for (int i = 0; i < cajas.length; i++) {
             if (cajas[i].isBoxed() && cajas[i].player != 0) {
+                if(i==jugadorActivo)
                 scores[cajas[i].player - 1]++;
             }
         }
@@ -235,39 +219,17 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     private boolean realizarConexionPuntos(ConnectionSprite conexion) {
         boolean newBox = false;
 
-        boolean[] estadoCajaAntesDeCoenxion = getEstaoCaja();	//	The two boolean arrays are used to see if a new box was created after the connection was made
+        boolean[] estadoCajaAntesDeConexion = getEstadoCaja();	//	The two boolean arrays are used to see if a new box was created after the connection was made
 
         conexion.connectionMade = true;
 
-        boolean[] estadoCajaDespuesDeConexion = getEstaoCaja();
+        boolean[] estadoCajaDespuesDeConexion = getEstadoCaja();
 
         for (int i = 0; i < cajas.length; i++) {
-            if (estadoCajaDespuesDeConexion[i] != estadoCajaAntesDeCoenxion[i]) {
+            if (estadoCajaDespuesDeConexion[i] != estadoCajaAntesDeConexion[i]) {
                 newBox = true;
                 cajas[i].player = jugadorActivo;
-            }
-        }
-
-        if (!newBox) {
-
-            if (jugadorActivo == jugadores.get(0)) {
-                jugadorActivo = jugadores.get(1);
-            } else if (jugadorActivo == jugadores.get(1)) {
-
-                if (cantidadJugadores == 2) {
-                    jugadorActivo = jugadores.get(0);
-                } else if (cantidadJugadores >= 3) {
-                    jugadorActivo = jugadores.get(2);
-                }
-
-            } else if (cantidadJugadores >= 3 && jugadorActivo == jugadores.get(2)) {
-                if (cantidadJugadores == 3) {
-                    jugadorActivo = jugadores.get(0);
-                } else {
-                    jugadorActivo = jugadores.get(3);
-                }
-            } else if (cantidadJugadores >= 3 && jugadorActivo == jugadores.get(3)) {
-                jugadorActivo = jugadores.get(0);
+                
             }
         }
 
@@ -286,15 +248,17 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void handleClick() {
+
         ConnectionSprite connection = getConexion(clickx, clicky);
         if (connection == null) {
             return;
         }
         if (!connection.connectionMade) {
-            
-            realizarConexionPuntos(connection);
+            int[] jugada = new int[]{clickx, clicky};
+            cliente.sendJugada(jugada);
         }
         repaint();
+
     }
 
     public void mouseMoved(MouseEvent event) {
@@ -308,9 +272,11 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     public void mouseClicked(MouseEvent event) {
-        clickx = event.getX();
-        clicky = event.getY();
-        handleClick();
+        if (jugadorActivo == turno) {
+            clickx = event.getX();
+            clicky = event.getY();
+            handleClick();
+        }
     }
 
     public void mouseEntered(MouseEvent event) {
@@ -337,47 +303,38 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
     }
 
     private void pintarConexiones(Graphics g) {
-        for (int i = 0; i < conexionesHorizontales.length; i++) {
-
-            if (!conexionesHorizontales[i].connectionMade) {
-                if (conexionesHorizontales[i].containsPoint(mousex, mousey)) {
-                    conexionesHorizontales[i].color = Color.BLACK;
-
+        for (ConnectionSprite conexionesh : conexionesHorizontales) {
+            if (!conexionesh.connectionMade) {
+                if (conexionesh.containsPoint(mousex, mousey)) {
+                    conexionesh.color = Color.BLACK;
                 } else {
-                    conexionesHorizontales[i].color = Color.WHITE;
+                    conexionesh.color = Color.WHITE;
                 }
-
             }
-
-            conexionesHorizontales[i].render(g);
+            conexionesh.render(g);
         }
-
-        for (int i = 0; i < conexionesVerticales.length; i++) {
-
-            if (!conexionesVerticales[i].connectionMade) {
-                if (conexionesVerticales[i].containsPoint(mousex, mousey)) {
-
-                    conexionesVerticales[i].color = Color.BLACK;
-
+        for (ConnectionSprite conexionesVerticale : conexionesVerticales) {
+            if (!conexionesVerticale.connectionMade) {
+                if (conexionesVerticale.containsPoint(mousex, mousey)) {
+                    conexionesVerticale.color = Color.BLACK;
                 } else {
-                    conexionesVerticales[i].color = Color.WHITE;
+                    conexionesVerticale.color = Color.WHITE;
                 }
             }
-            conexionesVerticales[i].render(g);
-
+            conexionesVerticale.render(g);
         }
     }
 
     public void pintarCaja(Graphics g) {
         for (int i = 0; i < cajas.length; i++) {
             if (cajas[i].isBoxed()) {
-                if (cajas[i].player == jugadorUno) {
+                if (1 == jugadorActivo) {
                     cajas[i].color = colorUno;
-                } else if (cajas[i].player == jugadorDos) {
+                } else if (2 == jugadorActivo) {
                     cajas[i].color = colorDos;
-                } else if (cajas[i].player == jugadorTres) {
+                } else if (3 == jugadorActivo) {
                     cajas[i].color = colorTres;
-                } else if (cajas[i].player == jugadorCuatro) {
+                } else if (4 == jugadorActivo) {
                     cajas[i].color = colorCuatro;
                 }
             } else {
@@ -441,9 +398,27 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         g.drawImage(bufferImage, 0, 0, null);
     }
 
+    //Esperar movimientos
     @Override
     public void run() {
-        empezarJuego();
+
+        if (turno > 1) {
+            cliente.saltarLinea();
+        }
+        System.out.println("Turno del jugador =" + turno);
+
+        while (true) {
+            try {
+                jugadorActivo = cliente.getTurnoValido();
+                System.out.println("Turno activo = " + jugadorActivo);
+            } catch (IOException | ClassNotFoundException e) {
+                Logger.getLogger(Timbiriche.class.getName()).log(Level.SEVERE, null, e);
+            }
+            int[] coordenadasJugada = cliente.getJugada();
+            realizarConexionPuntos(getConexion(coordenadasJugada[0], coordenadasJugada[1]));
+            repaint();
+
+        }
     }
 
 }

@@ -6,26 +6,12 @@
 package generacionTablero;
 
 import java.awt.Color;
-
-
-
-
 public class BoxSprite extends Sprite {
 
-	/*
-	 *
-	 *	BoxSprite is a subclass of Sprite. BoxSprites represent the actual boxes made up by the Dot
-	 *	Sprites and ConnectionSprites. BoxSprite contains references to the four ConnectionSprites
-	 *	which make up its borders. The isBoxed method returns true when all four of the border
-	 *	ConnectionSprites have true connectionMade fields. BoxSprites should be created using the
-	 *	static createBox method.
-	 *
-	 */
+	 ConnectionSprite[] horizontalConnections;	
+	 ConnectionSprite[] verticalConnections;		
 
-	ConnectionSprite[] horizontalConnections;	//	The ConnectionSprites that are the top and bottom borders of the box
-	ConnectionSprite[] verticalConnections;		//	The ConnectionSprites that are the left and right borders of the box
-
-	int player;	//	Tracks the player that closed the box
+	 int player;
 
 	public BoxSprite() {
 		super();

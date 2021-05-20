@@ -5,6 +5,8 @@
  */
 package conexion;
 
+import generacionTablero.ConnectionSprite;
+import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -57,6 +59,16 @@ public class ClientSideConnection {
         }
     }
 
+    public int getCantidadMaxJugadores() {
+        try {
+            Integer jugadores = (Integer) dis.readObject();
+            return jugadores;
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error al recuperar la lista de jugadores.");
+        }
+        return -1;
+    }
+
     public Integer leerJugadoresConectados() {
         try {
             Integer jugadores = (Integer) dis.readObject();
@@ -84,13 +96,44 @@ public class ClientSideConnection {
         return -1;
     }
 
-    public boolean getTurnoValido() throws IOException, ClassNotFoundException {
+    public int getTurnoValido() throws IOException, ClassNotFoundException {
         try {
-            return (boolean) dis.readObject();
+            return (Integer) dis.readObject();
+
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        return false;
+        }
+        return -1;
+    }
+
+    public void sendJugada(int[] jugada) {
+        try {
+            dos.writeObject(jugada);
+            dos.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public int[] getJugada() {
+        try {
+            Object object = dis.readObject();
+            return (int[]) object;
+        } catch (IOException | ClassNotFoundException e) {
+            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, e);
+        } catch (ClassCastException e) {
+            System.out.println();
+        }
+        return null;
+    }
+
+    public int getTurno() {
+        try {
+            return (int) dis.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return -1;
     }
 
 

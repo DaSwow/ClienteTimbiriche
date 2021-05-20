@@ -6,7 +6,8 @@ import generacionTablero.Timbiriche;
 public class SalaEspera extends javax.swing.JFrame implements Runnable {
 
     private ClientSideConnection cliente;
-
+    private int cantidadMax;
+    
     public SalaEspera(String n, ClientSideConnection c) {
         cliente = c;
         initComponents();
@@ -72,8 +73,8 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
     public void IniciarPartida() {
 
         int tamanio = 0;
-        int maxTamJug = cliente.getCantidadMaximaJugadores();
-        switch (maxTamJug) {
+        
+        switch (cantidadMax) {
             case 2:
                 tamanio = 10;
                 break;
@@ -98,16 +99,16 @@ public class SalaEspera extends javax.swing.JFrame implements Runnable {
 
     @Override
     public void run() {
-
+        cantidadMax=cliente.getCantidadMaximaJugadores();
         while (true) {
-            int cantidadMaxima = cliente.getCantidadMaximaJugadores();
+           
             int jugadoresActuales = cliente.leerJugadoresConectados();
 
-            if (cantidadMaxima == jugadoresActuales) {
-                if (cantidadMaxima==3 && jugadoresActuales != 3) {
+            if (cantidadMax == jugadoresActuales) {
+                if (cantidadMax==3 && jugadoresActuales != 3) {
                     cliente.saltarLinea();
                 }
-                else if(cantidadMaxima==4 && jugadoresActuales!=4){
+                else if(cantidadMax==4 && jugadoresActuales!=4){
                     cliente.saltarLinea();
                 }
                 

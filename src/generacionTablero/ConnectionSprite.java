@@ -3,8 +3,9 @@ package generacionTablero;
 
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class ConnectionSprite extends Sprite {
+public class ConnectionSprite extends Sprite  implements Serializable{
 
 	/*
 	 *
