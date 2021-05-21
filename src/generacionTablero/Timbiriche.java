@@ -65,17 +65,17 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         cliente = c;
 
         setLayout(new CardLayout(espacio, espacio));
-        setSize(1400, 1000);
+        setSize(1100, 700);
         setFont(new Font("Courier", Font.BOLD, 20));
         setResizable(false);
         switch (tamanio - 1) {
             case 10:   
-                espacioEntrePuntos = 65;
-                tamanioPuntos = 10;
+                espacioEntrePuntos = 50;
+                tamanioPuntos = 8;
                 break;
             case 20:
-                espacioEntrePuntos = 30;
-                tamanioPuntos = 10;
+                espacioEntrePuntos = 20;
+                tamanioPuntos = 8;
                 break;
 
         }
@@ -106,9 +106,9 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
         dim = getSize();
         centrox = dim.width / 2;
-        centroy = (dim.height) / 2;
+        centroy = 330 ;
 
-        tamanioLadoTablero = cantidadPuntos * tamanioPuntos + (cantidadPuntos - 1) * espacioEntrePuntos;
+        tamanioLadoTablero = ((cantidadPuntos * tamanioPuntos + (cantidadPuntos - 1) * espacioEntrePuntos)/10)*8;
         espacio = tamanioPuntos + espacioEntrePuntos;
 
     }
