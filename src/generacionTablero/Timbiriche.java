@@ -25,7 +25,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
     public int cantidadJugadores;
 
-    public static int cantidadPuntos;
+    private static int cantidadPuntos;
     public static int espacioEntrePuntos;
     public static int tamanioPuntos;
 
@@ -325,7 +325,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         }
     }
 
-    public void pintarCaja(Graphics g) {
+    private void pintarCaja(Graphics g) {
         for (int i = 0; i < cajas.length; i++) {
             if (cajas[i].isBoxed()) {
                 if (1 == jugadorActivo) {
@@ -346,7 +346,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
         }
     }
 
-    public void pintarEstado(Graphics g) {
+    private void pintarEstado(Graphics g) {
         int[] scores = calcularPuntajes();
         String status = "Es el turno del jugador " + jugadorActivo;
         String status2 = "Jugador 1: " + scores[0];
@@ -379,6 +379,7 @@ public class Timbiriche extends JFrame implements MouseMotionListener, MouseList
 
     }
 
+    @Override
     public void update(Graphics g) {
         paint(g);
     }
