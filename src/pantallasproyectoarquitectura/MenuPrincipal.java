@@ -17,7 +17,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
      * Creates new form MenuPrincipal
      */
     public MenuPrincipal() {
-        cliente=new ClientSideConnection();
+        cliente=ClientSideConnection.getSingleSideConnection();
         initComponents();
         
     }

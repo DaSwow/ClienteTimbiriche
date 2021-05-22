@@ -1,4 +1,3 @@
-
 package conexion;
 
 import generacionTablero.ConnectionSprite;
@@ -19,12 +18,13 @@ import javax.swing.JOptionPane;
  */
 public class ClientSideConnection {
 
+    private static  ClientSideConnection csc;
+
     private Socket socket;
     private ObjectOutputStream dos;
     private ObjectInputStream dis;
 
-    public ClientSideConnection() {
-
+    private ClientSideConnection() {
         try {
             socket = new Socket("localhost", 9876);
             dos = new ObjectOutputStream(socket.getOutputStream());
@@ -36,6 +36,13 @@ public class ClientSideConnection {
             JOptionPane.showMessageDialog(null, "No se pudo establecer una conexion con el servidor");
             System.exit(0);
         }
+    }
+
+    public static ClientSideConnection getSingleSideConnection() {
+        if (csc == null) {
+            csc = new ClientSideConnection();
+        }
+        return csc;
     }
 
     public void conectarJugador(String nombre) {
@@ -78,16 +85,20 @@ public class ClientSideConnection {
     public void saltarLinea() {
         try {
             dis.readObject();
+
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public int getCantidadMaximaJugadores() {
         try {
             return ((Integer) dis.readObject());
+
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
     }
@@ -97,7 +108,8 @@ public class ClientSideConnection {
             return (Integer) dis.readObject();
 
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         return -1;
     }
@@ -106,8 +118,10 @@ public class ClientSideConnection {
         try {
             dos.writeObject(jugada);
             dos.flush();
+
         } catch (IOException ex) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -115,8 +129,10 @@ public class ClientSideConnection {
         try {
             Object object = dis.readObject();
             return (int[]) object;
+
         } catch (IOException | ClassNotFoundException e) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, e);
         } catch (ClassCastException e) {
             System.out.println();
         }
@@ -126,11 +142,12 @@ public class ClientSideConnection {
     public int getTurno() {
         try {
             return (int) dis.readObject();
+
         } catch (IOException | ClassNotFoundException e) {
-            Logger.getLogger(ClientSideConnection.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ClientSideConnection.class
+                    .getName()).log(Level.SEVERE, null, e);
         }
         return -1;
     }
-
 
 }
